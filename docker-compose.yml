@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: onlyoffice-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../shared-data:/shared-data
+    depends_on:
+      - node1
+      - node2
+
+  node1:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice-node1
+    ports:
+      - "8001:80"
+    volumes:
+      - ./shared-data:/var/www/onlyoffice/Data
+
+  node2:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice-node2
+    ports:
+      - "8002:80"
+    volumes:
+      - ./shared-data:/var/www/onlyoffice/Data
